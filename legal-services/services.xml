@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services>
+  <service>
+    <type>Семейное право</type>
+    <description>Консультация по вопросам бракоразводных процессов, алиментов и опеки.</description>
+    <cost>3000</cost>
+    <duration>60</duration>
+    <specialists>Иванов А.А., Петрова О.В.</specialists>
+  </service>
+  <service>
+    <type>Трудовое право</type>
+    <description>Помощь в трудовых спорах, составление договоров.</description>
+    <cost>2500</cost>
+    <duration>45</duration>
+    <specialists>Сидоров И.Г., Васильев А.В.</specialists>
+  </service>
+  <service>
+    <type>Гражданское право</type>
+    <description>Консультации по договорным спорам и взысканию долгов.</description>
+    <cost>2800</cost>
+    <duration>50</duration>
+    <specialists>Горшкова Е.В., Андреев Л.В.</specialists>
+  </service>
+  <service>
+    <type>Международное право</type>
+    <description>Консультации по вопросам международной торговли и инвестиций.</description>
+    <cost>8000</cost>
+    <duration>180</duration>
+    <specialists>Соловьева Т.В., Никифоров И.П.</specialists>
+  </service>
+</services>
+

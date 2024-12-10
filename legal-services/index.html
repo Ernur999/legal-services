@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Юридические услуги</title>
+  <style>
+    /* Базовые стили для страницы */
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    table, th, td { border: 1px solid #ddd; }
+    th, td { padding: 10px; text-align: left; }
+    th { background-color: #f4f4f4; cursor: pointer; }
+    #filter-input { margin-bottom: 20px; padding: 10px; width: 100%; box-sizing: border-box; }
+  </style>
+</head>
+<body>
+  <h1>Юридические услуги</h1>
+  <!-- Поля для фильтрации по цене -->
+  <div>
+    <label for="min-price">Минимальная цена:</label>
+    <input type="number" id="min-price" placeholder="От">
+
+    <label for="max-price">Максимальная цена:</label>
+    <input type="number" id="max-price" placeholder="До">
+
+    <button onclick="filterByPrice()">Фильтровать по цене</button>
+  </div>
+
+  <h2></h2>
+  <!-- Поле для фильтрации таблицы -->
+  <input type="text" id="filter-input" placeholder="Введите текст для поиска..." oninput="filterTable()">
+  
+  <!-- Список услуг -->
+  <ul id="service-list"></ul>
+  
+  <!-- Таблица с юридическими услугами -->
+  <table id="service-table">
+    <thead>
+      <tr>
+        <!-- Заголовки таблицы с функцией сортировки -->
+        <th onclick="sortTable(0)">Тип услуги</th>
+        <th onclick="sortTable(1)">Описание</th>
+        <th onclick="sortTable(2)">Стоимость</th>
+        <th onclick="sortTable(3)">Длительность</th>
+        <th onclick="sortTable(4)">Специалисты</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <script>
+    function loadXML() {
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", "services.xml", true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        console.log(xhr.responseText); // Проверка содержимого
+        const xml = xhr.responseXML;
+        console.log(xml); // Проверка структуры XML
+      } else {
+        console.error("Ошибка загрузки файла XML:", xhr.statusText);
+      }
+    }
+  };
+  xhr.send();
+}
+window.onload = loadXML;
+
+    // Отображение данных из XML
+    function displayServices(xml) {
+      const services = xml.getElementsByTagName("service");
+
+      const serviceList = document.getElementById("service-list");
+      const serviceTableBody = document.querySelector("#service-table tbody");
+
+      Array.from(services).forEach(service => {
+        const listItem = document.createElement("li");
+        listItem.textContent = service.getElementsByTagName("type")[0].textContent;
+        serviceList.appendChild(listItem);
+
+        // Создаем строку таблицы
+        const row = document.createElement("tr");
+        row.innerHTML =` 
+          <td>${service.getElementsByTagName("type")[0].textContent}</td>
+          <td>${service.getElementsByTagName("description")[0].textContent}</td>
+          <td>${service.getElementsByTagName("cost")[0].textContent} руб.</td>
+          <td>${service.getElementsByTagName("duration")[0].textContent} мин.</td>
+          <td>${service.getElementsByTagName("specialists")[0].textContent}</td>
+       ` ;
+        serviceTableBody.appendChild(row);
+      });
+    }
+
+ 
+    function filterTable() {
+      const filterValue = document.getElementById("filter-input").value.toLowerCase();
+      const rows = document.querySelectorAll("#service-table tbody tr");
+
+      rows.forEach(row => {
+        const cells = Array.from(row.cells);
+        const matches = cells.some(cell =>
+          cell.textContent.toLowerCase().includes(filterValue)
+        );
+        row.style.display = matches ? "" : "none";
+      });
+    }
+
+
+    function filterByPrice() {
+      const minPrice = parseFloat(document.getElementById("min-price").value) || 0;
+      const maxPrice = parseFloat(document.getElementById("max-price").value) || Infinity;
+      const rows = document.querySelectorAll("#service-table tbody tr");
+
+      rows.forEach(row => {
+        const priceText = row.cells[2].textContent.replace(" руб.", "").trim();
+        const price = parseFloat(priceText);
+
+        if (price >= minPrice && price <= maxPrice) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    }
+
+  
+    window.onload = loadXML;
+  </script>
+</body>
+</html>
